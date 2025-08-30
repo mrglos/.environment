@@ -24,6 +24,23 @@ return {
 						end,
 					},
 				},
+				lualine_b = {
+					{
+						"branch",
+						fmt = function(str)
+							local total_width = vim.api.nvim_win_get_width(0)
+							local max_length = math.ceil(total_width * 0.2)
+							-- local branch_name = str:gsub("^marekg%-at%-s/", "/")
+							local branch_name = str:gsub("^marekg%-at%-s/", "…")
+							if #branch_name > max_length then
+								return branch_name:sub(1, max_length) .. "…"
+							else
+								return branch_name
+							end
+						end,
+					},
+					-- { "diff", colored = true, symbols = { added = " ", modified = "柳", removed = " " } },
+				},
 				lualine_c = {
 					{
 						"filename",
