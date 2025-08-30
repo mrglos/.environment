@@ -27,3 +27,7 @@ opt.incsearch = true -- search as characters are entered
 opt.hlsearch = false -- do not highlight matches
 opt.ignorecase = true -- ignore case in searches by default
 opt.smartcase = true -- but make it case sensitive if an uppercase is entered
+
+vim.g.gitcommit_summary_length = 69
+
+vim.o.winborder = "rounded" -- set the border style for floating windows

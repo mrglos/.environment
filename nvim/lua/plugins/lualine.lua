@@ -36,6 +36,7 @@ return {
 						cond = lazy_status.has_updates,
 						color = { fg = "#ff007c" },
 					},
+					{ "lsp_status" },
 					{ "copilot" },
 					{ "encoding" },
 					{ "fileformat" },

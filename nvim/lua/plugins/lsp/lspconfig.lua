@@ -10,44 +10,12 @@ return {
 		-- -- Set different settings for different languages' LSP
 		-- -- LSP list: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 		-- -- How to use setup({}): https://github.com/neovim/nvim-lspconfig/wiki/Understanding-setup-%7B%7D
-		-- --     - the settings table is sent to the LSP
-		-- --     - on_attach: a lua callback function to run after LSP attaches to a given buffer
-		--
-		-- local lspconfig = require('lspconfig')
-		--
-		-- -- Customized on_attach function
-		-- -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-		-- local opts = { noremap = true, silent = true }
-		-- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-		-- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-		-- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-		-- vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-		--
 		-- -- Use an on_attach function to only map the following keys
 		-- -- after the language server attaches to the current buffer
 		-- local on_attach = function(client, bufnr)
 		--     -- Enable completion triggered by <c-x><c-o>
 		--     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 		--
-		--     -- See `:help vim.lsp.*` for documentation on any of the below functions
-		--     local bufopts = { noremap = true, silent = true, buffer = bufnr }
-		--     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-		--     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-		--     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-		--     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-		--     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-		--     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-		--     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-		--     vim.keymap.set('n', '<space>wl', function()
-		--         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-		--     end, bufopts)
-		--     vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-		--     vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-		--     vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-		--     vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-		--     vim.keymap.set("n", "<space>f", function()
-		--         vim.lsp.buf.format({ async = true })
-		--     end, bufopts)
 		-- end
 		--
 		-- -- Configure each language
@@ -75,28 +43,34 @@ return {
 				-- set keybinds
 				opts.desc = "Show LSP references"
 				km.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+				-- km.set('n', 'gr', vim.lsp.buf.references, opts)
 
 				opts.desc = "Go to declaration"
 				km.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
 
 				opts.desc = "Show LSP definitions"
-				km.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+				km.set("n", "gd", vim.lsp.buf.definition, opts) -- show lsp definitions
 
 				opts.desc = "Show LSP implementations"
 				km.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+				-- km.set('n', 'gi', vim.lsp.buf.implementation, opts)
 
 				opts.desc = "Show LSP type definitions"
-				km.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+				km.set("n", "gt", vim.lsp.buf.type_definition, opts) -- show lsp type definitions
 
-				opts.desc = "See available code actions"
-				km.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
+				-- opts.desc = "See available code actions"
+				-- km.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
 
-				opts.desc = "Smart rename"
-				km.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
+				-- opts.desc = "Smart rename"
+				-- km.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
 
 				opts.desc = "Show buffer diagnostics"
 				km.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
 
+				-- opts.desc = "Show line diagnostics"
+				-- km.set("n", "<leader>d", function()
+				-- 	vim.diagnostic.open_float({ border = "rounded" })
+				-- end, opts) -- show diagnostics for line
 				opts.desc = "Show line diagnostics"
 				km.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
 
@@ -111,64 +85,106 @@ return {
 
 				opts.desc = "Restart LSP"
 				km.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+				opts.desc = "List workspace folders"
+				vim.keymap.set("n", "<leader>wl", function()
+					vim.print(vim.lsp.buf.list_workspace_folders())
+				end, opts)
 			end,
 		})
-
-		-- override options to display borders around floating window
-		-- local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-		-- function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-		-- 	opts = opts or {}
-		-- 	opts.border = opts.border or "rounded"
-		-- 	return orig_util_open_floating_preview(contents, syntax, opts, ...)
-		-- end
-		local handler_overrides = {
-			["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
-		}
 
 		-- used to enable autocompletion (assign to every lsp server config)
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
-		-- change the Diagnostic symbols in the sign column (gutter)
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-		for type, icon in pairs(signs) do
-			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-		end
+		-- -- change the Diagnostic symbols in the sign column (gutter)
+		-- local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		-- for type, icon in pairs(signs) do
+		-- 	local hl = "DiagnosticSign" .. type
+		-- 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+		-- end
 
-		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-					handlers = handler_overrides,
-				})
-			end,
-			["graphql"] = function()
-				-- configure graphql language server
-				lspconfig["graphql"].setup({
-					capabilities = capabilities,
-					handlers = handler_overrides,
-					filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-				})
-			end,
-			["lua_ls"] = function()
-				-- configure lua server (with special settings)
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					handlers = handler_overrides,
-					settings = {
-						Lua = {
-							-- make the language server recognize "vim" global
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
-							},
-						},
+		-- Highlight entire line for errors
+		-- Highlight the line number for warnings
+		vim.diagnostic.config({
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = "",
+					[vim.diagnostic.severity.WARN] = "",
+					[vim.diagnostic.severity.INFO] = "󰠠",
+					[vim.diagnostic.severity.HINT] = "",
+				},
+				-- linehl = {
+				-- 	[vim.diagnostic.severity.ERROR] = "ErrorMsg",
+				-- 	[vim.diagnostic.severity.HINT] = "Hint",
+				-- },
+				-- numhl = {
+				-- 	[vim.diagnostic.severity.WARN] = "WarningMsg",
+				-- 	[vim.diagnostic.severity.HINT] = "HintMsg",
+				-- },
+			},
+		})
+
+		-- commented out as this funtionality was removed in mason-lspconfig v2.0
+		-- and using native neovim v0.11 lspconfig setup instead is recommended
+		-- mason_lspconfig.setup_handlers({
+		-- 	-- default handler for installed servers
+		-- 	function(server_name)
+		-- 		lspconfig[server_name].setup({
+		-- 			capabilities = capabilities,
+		-- 			handlers = handler_overrides,
+		-- 		})
+		-- 	end,
+		-- 	-- ["ts_ls"] = function()
+		-- 	-- 	-- customize root config for tsserver
+		-- 	-- 	lspconfig["ts_ls"].setup({
+		-- 	-- 		capabilities = capabilities,
+		-- 	-- 		handlers = handler_overrides,
+		-- 	-- 		cmd = { "typescript-language-server", "--stdio", "--max-old-space-size", "8096" },
+		-- 	-- 		-- override root_dir to allow for correct file navigation in samsara's monorepo spaghetti madness
+		-- 	-- 		-- root_dir = lspconfig.util.root_pattern("app.tsx", "tsconfig.json", "jsconfig.json", "package.json", ".git"),
+		-- 	-- 	})
+		-- 	-- end,
+		-- 	["graphql"] = function()
+		-- 		-- configure graphql language server
+		-- 		lspconfig["graphql"].setup({
+		-- 			capabilities = capabilities,
+		-- 			handlers = handler_overrides,
+		-- 			filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+		-- 		})
+		-- 	end,
+		-- 	["lua_ls"] = function()
+		-- 		-- configure lua server (with special settings)
+		-- 		lspconfig["lua_ls"].setup({
+		-- 			capabilities = capabilities,
+		-- 			handlers = handler_overrides,
+		-- 			settings = {
+		-- 				Lua = {
+		-- 					-- make the language server recognize "vim" global
+		-- 					diagnostics = {
+		-- 						globals = { "vim" },
+		-- 					},
+		-- 					completion = {
+		-- 						callSnippet = "Replace",
+		-- 					},
+		-- 				},
+		-- 			},
+		-- 		})
+		-- 	end,
+		-- })
+		vim.lsp.config("lua_ls", {
+			capabilities = capabilities,
+			handlers = handler_overrides,
+			settings = {
+				Lua = {
+					-- make the language server recognize "vim" global
+					diagnostics = {
+						globals = { "vim" },
 					},
-				})
-			end,
+					completion = {
+						callSnippet = "Replace",
+					},
+				},
+			},
 		})
 	end,
 }

@@ -4,6 +4,11 @@ return {
 	config = function()
 		local lint = require("lint")
 
+		-- -- customize eslint to workspace specific settings :(
+		-- local eslint_args = lint.linters.eslint_d.args
+		-- table.insert(eslint_args, 1, "--config")
+		-- table.insert(eslint_args, 2, ".eslintrc-incremental.js")
+
 		lint.linters_by_ft = {
 			html = { "eslint_d", "stylelint" },
 			javascript = { "eslint_d", "stylelint" },
@@ -19,6 +24,7 @@ return {
 			-- markdown = { "stylelint" },
 			bash = { "shellcheck" },
 			zsh = { "shellcheck" },
+			gitcommit = { "gitlint" },
 		}
 
 		local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })

@@ -14,7 +14,7 @@ return {
 		-- enable mason and configure icons
 		mason.setup({
 			-- uncoment line below if you run into troubles installing anything
-			log_level = vim.log.levels.DEBUG,
+			-- log_level = vim.log.levels.DEBUG,
 			ui = {
 				border = "rounded",
 				icons = {
@@ -29,7 +29,7 @@ return {
 			-- list of servers for mason to install
 			ensure_installed = {
 				"lua_ls",
-				"gopls@v0.15.3", -- bind specific version because of go version we currently use 1.19
+				"gopls",
 				"ts_ls",
 				"pyright",
 				"graphql",
@@ -45,10 +45,11 @@ return {
 				"black", -- for python
 
 				-- linters
-				{ "pylint", version = "3.2.7" }, -- bind specific version because it's the last one suppoerting Python 3.8
+				{ "pylint", version = "3.2.7" }, -- bind specific version because it's the last one supporting Python 3.8
 				"eslint_d",
 				"stylelint",
 				"shellcheck",
+				"gitlint",
 			},
 		})
 	end,
