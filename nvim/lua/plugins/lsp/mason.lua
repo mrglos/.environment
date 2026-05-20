@@ -30,9 +30,10 @@ return {
 			ensure_installed = {
 				"lua_ls",
 				"gopls",
-				"ts_ls",
+				-- "ts_ls",
 				"pyright",
 				"graphql",
+				"bashls",
 			},
 		})
 
@@ -45,7 +46,7 @@ return {
 				"black", -- for python
 
 				-- linters
-				{ "pylint", version = "3.2.7" }, -- bind specific version because it's the last one supporting Python 3.8
+				"pylint",
 				"eslint_d",
 				"stylelint",
 				"shellcheck",

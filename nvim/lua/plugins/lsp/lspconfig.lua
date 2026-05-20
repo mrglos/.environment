@@ -108,10 +108,10 @@ return {
 		vim.diagnostic.config({
 			signs = {
 				text = {
-					[vim.diagnostic.severity.ERROR] = "",
-					[vim.diagnostic.severity.WARN] = "",
-					[vim.diagnostic.severity.INFO] = "󰠠",
-					[vim.diagnostic.severity.HINT] = "",
+					[vim.diagnostic.severity.ERROR] = " ",
+					[vim.diagnostic.severity.WARN] = " ",
+					[vim.diagnostic.severity.INFO] = "󰠠 ",
+					[vim.diagnostic.severity.HINT] = " ",
 				},
 				-- linehl = {
 				-- 	[vim.diagnostic.severity.ERROR] = "ErrorMsg",
@@ -172,8 +172,6 @@ return {
 		-- 	end,
 		-- })
 		vim.lsp.config("lua_ls", {
-			capabilities = capabilities,
-			handlers = handler_overrides,
 			settings = {
 				Lua = {
 					-- make the language server recognize "vim" global
@@ -185,6 +183,22 @@ return {
 					},
 				},
 			},
+		})
+
+		vim.lsp.config("bashls", {
+			settings = {
+				bashIde = {
+					-- Glob pattern for finding and parsing shell script files in the workspace.
+					-- Used by the background analysis features across files.
+
+					-- Prevent recursive scanning which will cause issues when opening a file
+					-- directly in the home directory (e.g. ~/foo.sh).
+					--
+					-- Default upstream pattern is "**/*@(.sh|.inc|.bash|.command)".
+					globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.zsh|.command)",
+				},
+			},
+			filetypes = { "bash", "sh", "zsh" },
 		})
 	end,
 }
