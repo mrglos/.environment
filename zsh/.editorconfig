@@ -1,0 +1,17 @@
+root = true
+
+[**.zsh]
+indent_style = tab
+indent_size = 2
+# shfmt specific option supported by bashls, not in EditorConfig standard
+switch_case_indent = true
+
+[**zsh*]
+indent_style = tab
+indent_size = 2
+switch_case_indent = true
+
+[prompts/*]
+indent_style = tab
+indent_size = 2
+switch_case_indent = true
